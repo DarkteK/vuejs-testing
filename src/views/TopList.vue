@@ -15,19 +15,19 @@
         v-bind:key="index"
       >
         <span class="section__author unread">
-          Author
+          {{ items.data.author }}
         </span>
         <span class="section__created_date">
-          Date
+          {{ items.data.created_utc | formatDate }}
         </span>
 
         <v-list-item three-line>
           <v-list-item-avatar size="100px">
-            <!--<img :src="image" />-->
+            <img :src="items.data.thumbnail" />
           </v-list-item-avatar>
-          <span
-            class="section__title unread"
-          >Title</span
+          <span class="section__title unread">
+            {{ items.data.title }}
+          </span
           >
         </v-list-item>
 
@@ -41,7 +41,7 @@
             </v-card-actions>
           </v-col>
           <v-col cols="6" md="6" class="section__num_comments">
-            Number of comments
+            {{ items.data.num_comments }} comments
           </v-col>
         </v-row>
       </v-card>
@@ -69,6 +69,7 @@
 
 <script>
 import TopListService from "@/services/TopListService";
+import moment from "moment";
 
 export default {
   name: "TopList",
@@ -90,6 +91,12 @@ export default {
   },
   mounted() {
     this.getTopList();
+  },
+  filters: {
+    formatDate(utcDate) {
+      if (!utcDate) return "";
+      return moment(utcDate, "X").fromNow();
+    }
   }
 };
 </script>
