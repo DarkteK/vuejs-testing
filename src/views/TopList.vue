@@ -25,7 +25,10 @@
           <v-list-item-avatar size="100px">
             <img :src="items.data.thumbnail" />
           </v-list-item-avatar>
-          <span class="section__title unread">
+          <span
+            class="section__title unread"
+            @click="setTopListItem(items.data)"
+          >
             {{ items.data.title }}
           </span
           >
@@ -34,7 +37,7 @@
         <v-row style="margin: 0">
           <v-col cols="6" md="6" class="section__actions">
             <v-card-actions>
-              <v-btn icon color="orange">
+              <v-btn icon color="orange" @click="removeTopListItem(index)">
                 <v-icon>mdi-close-box-multiple-outline</v-icon>
               </v-btn>
               Dismiss Post
@@ -61,6 +64,7 @@
       outlined
       tile
       dark
+      @click="removeTopListItem()"
     >
       Dismiss All
     </v-card>
@@ -87,6 +91,18 @@ export default {
           this.loading = false;
         }
       });
+    },
+    removeTopListItem(id = null) {
+      this.loading = true;
+      if (id === null) {
+        this.listData = "";
+      } else {
+        this.$delete(this.listData, id);
+      }
+      this.loading = false;
+    },
+    setTopListItem(listItem) {
+      this.$store.commit("setTopLostItem", listItem);
     }
   },
   mounted() {

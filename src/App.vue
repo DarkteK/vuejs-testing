@@ -15,6 +15,7 @@
 
 <script>
 import { Layout } from "vue-split-layout";
+import store from "./store";
 import TopList from "./views/TopList";
 import TopListItemDetail from "./views/TopListItemDetail";
 
@@ -22,6 +23,7 @@ export default {
   components: {
     TopList,
     TopListItemDetail,
+    store
   },
   data() {
     return {
