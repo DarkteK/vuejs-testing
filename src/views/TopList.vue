@@ -3,15 +3,16 @@
     <v-card class="pa-2 scrollable-header text-center" tile fixed dark>
       Reddit Posts
     </v-card>
-    <div class="scrollable-content">
+    <div class="scrollable-content" v-if="listData">
       <v-card
+        :loading="loading"
         class="pa-1"
         tile
         dark
         elevation
         color="#202022"
-        v-for="n in 60"
-        v-bind:key="n"
+        v-for="(items, index) in listData"
+        v-bind:key="index"
       >
         <span class="section__author unread">
           Author
@@ -45,6 +46,16 @@
         </v-row>
       </v-card>
     </div>
+    <div v-else class="scrollable-content no-results">
+      <v-progress-circular
+        v-if="loading"
+        indeterminate
+        :size="150"
+        :width="8"
+        color="orange"
+      >
+      </v-progress-circular>
+    </div>
     <v-card
       class="pa-2 scrollable-footer text-center"
       outlined
@@ -63,10 +74,22 @@ export default {
   name: "TopList",
   data() {
     return {
+      loading: true,
       listData: ""
     };
   },
   methods: {
+    async getTopList() {
+      await TopListService.getTopList().then(response => {
+        if (response.data.data !== null) {
+          this.listData = response.data.data.children;
+          this.loading = false;
+        }
+      });
+    }
+  },
+  mounted() {
+    this.getTopList();
   }
 };
 </script>
@@ -81,6 +104,14 @@ export default {
     height: auto !important;
     max-height: calc(100vh - 84px) !important;
     box-sizing: border-box;
+    &.no-results {
+      min-height: calc(100vh - 84px) !important;
+      overflow-y: hidden;
+      background-color: #202022;
+      color: white;
+      text-align: center;
+      padding: 50% 0;
+    }
   }
   .scrollable-footer {
     bottom: 0;
